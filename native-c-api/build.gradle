@@ -1,0 +1,12 @@
+plugins {
+    id 'c'
+}
+
+model {
+    components {
+        // This generates "libcapi.so" (Linux/macOS) or "capi.dll" (Windows)
+        capi(NativeLibrarySpec) {
+            // targetPlatform "x86_64" // Adjust or omit to use host platform defaults
+        }
+    }
+}

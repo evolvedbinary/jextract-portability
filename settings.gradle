@@ -1,0 +1,3 @@
+rootProject.name = 'ffm-api'
+include 'native-c-api'
+include 'java-api'

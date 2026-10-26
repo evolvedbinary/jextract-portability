@@ -1,0 +1,66 @@
+plugins {
+    id 'application'
+    // 1. Add the jextract plugin
+    id 'io.github.krakowski.jextract' version '0.5.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        // FFM is fully finalized in Java 22 and updated in newer releases
+        languageVersion = JavaLanguageVersion.of(25) 
+    }
+}
+
+application {
+    mainClass = 'com.evolvedbinary.jportable.App'
+}
+
+// Configure jextract to scan header file
+jextract {
+    // Point it to the header file in your C module
+    header("${project(':native-c-api').projectDir}/src/capi/c/api.h") {
+        // Tie it to your shared library name
+        libraries = ['capi']
+        // The Java package where files will be generated
+        targetPackage = 'com.evolvedbinary.capi.generated'
+        // The name of the main generated wrapper class
+        className = 'CAPILib'
+    }
+}
+
+// Automatically tell the JVM where to look for the compiled C library and unlock native execution flags
+tasks.named('run', JavaExec) {
+    // 1. Dependency: Always rebuild the C shared library before launching the Java App
+    dependsOn ':native-c-api:capiSharedLibrary'
+
+    // 2. Locate the folder where Gradle outputs the built C library files
+    def nativeLibDir = project(':native-c-api').file("build/libs/capi/shared")
+
+    // 3. JVM Configuration Flags
+    systemProperty "java.library.path", nativeLibDir.absolutePath
+    jvmArgs += ['--enable-native-access=ALL-UNNAMED'] 
+}
+
+// Force the jar task to wait for the C library, then copy it inside
+tasks.named('jar') {
+    dependsOn ':native-c-api:capiSharedLibrary'
+    
+    // Grab the folder containing the compiled .so, .dll, or .dylib
+    def nativeLibDir = project(':native-c-api').file("build/libs/capi/shared")
+    
+    // Embed it inside the JAR under a "native" resources folder
+    from(nativeLibDir) {
+        into 'native'
+    }
+}
+
+distributions.main.contents {
+    // Automatically copy the compiled C binaries into the 'lib' folder of the distribution
+    from(project(':native-c-api').file("build/libs/capi/shared")) {
+        into 'lib'
+    }
+}
