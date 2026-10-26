@@ -1,2 +1,5 @@
 /gradle/wrapper/gradle-wrapper.jar
 /.gradle
+/java-api/build
+/build/reports/problems/problems-report.html
+/native-c-api/build

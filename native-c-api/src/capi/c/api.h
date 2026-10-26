@@ -8,25 +8,14 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct api_struct_t {
-    const char *buffer;
-    size_t size;
-    char c;
-    short s;
-    int i;
-    long l;
-    long long ll;
-    uint8_t u8;
-    uint16_t u16;
-    uint32_t u32;
-    uint64_t u64;
-} api_struct_t;
+// Fill in a buffer of longs with start..start + (stride * count)
+// When we print it out bytewise on the Java side, stride should vary.
+int setLong(long *buf, long start, long stride, long count);
 
-char *method1(api_struct_t *s1, const char *buf, size_t size);
-
-void method2(api_struct_t sArray[], api_struct_t **sPtrPtr, char c, short s, int i, long l, long long ll);
-
-void method3(api_struct_t sArray[8], api_struct_t **sPtrPtr, uint8_t u8, uint16_t u16, uint32_t u32, uint64_t u64);
+// Fill in a series of buffers with start..start + (stride * count)
+// Exhaust each buffer (per_buf_size elements) in turn
+// This ensures we can lay out pointers consistently
+int setLongBuffers(long **bufs, size_t per_buf_size, long start, long stride, long count);
 
 #ifdef __cplusplus
 } /* end extern "C" */
