@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     // jextract plugin
-    id 'io.github.krakowski.jextract' version '0.5.0'
+    id("de.infolektuell.jextract") version "1.0.0"
 }
 
 repositories {
@@ -11,7 +11,7 @@ repositories {
 java {
     toolchain {
         // FFM is fully finalized in Java 22 and updated in newer releases
-        languageVersion = JavaLanguageVersion.of(25) 
+        languageVersion = JavaLanguageVersion.of(22) 
     }
 }
 
@@ -28,17 +28,18 @@ application {
 }
 
 // Configure jextract to scan header file
-jextract {
-    // Point to the header file in the C module
-    header("${project(':native-c-api').projectDir}/src/capi/c/api.h") {
-        // Tie it to your shared library name
-        libraries = ['capi']
-        // The Java package where files will be generated
-        targetPackage = 'com.evolvedbinary.capi.generated'
-        // The name of the main generated wrapper class
-        className = 'CAPILib'
-    }
-}
+jextract.libraries {
+  def capi = register('capi') {
+    header = layout.projectDirectory.file("${project(':native-c-api').projectDir}/src/capi/c/api.h")
+    headerClassName = "CAPILib"
+    targetPackage = "com.evolvedbinary.capi.generated"
+    useSystemLoadLibrary = true
+    libraries.add("capi")
+  }
+  sourceSets.main {
+    jextract.libraries.addLater(capi)
+  }
+ }
 
 // Automatically tell the JVM where to look for the compiled C library and unlock native execution flags
 tasks.named('run', JavaExec) {
