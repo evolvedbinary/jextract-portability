@@ -1,6 +1,6 @@
 plugins {
     id 'application'
-    // 1. Add the jextract plugin
+    // jextract plugin
     id 'io.github.krakowski.jextract' version '0.5.0'
 }
 
@@ -29,7 +29,7 @@ application {
 
 // Configure jextract to scan header file
 jextract {
-    // Point it to the header file in your C module
+    // Point to the header file in the C module
     header("${project(':native-c-api').projectDir}/src/capi/c/api.h") {
         // Tie it to your shared library name
         libraries = ['capi']
