@@ -15,7 +15,7 @@ int setLong(long *buf, long start, long stride, long count);
 // Fill in a series of buffers with start..start + (stride * count)
 // Exhaust each buffer (per_buf_size elements) in turn
 // This ensures we can lay out pointers consistently
-int setLongBuffers(long **bufs, size_t per_buf_size, long start, long stride, long count);
+int setLongBuffers(long **bufs, long start, long stride, long segnum, size_t partSize);
 
 #ifdef __cplusplus
 } /* end extern "C" */
