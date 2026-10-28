@@ -33,4 +33,17 @@ git clone https://github.com/evolvedbinary/jextract-portability
 gradle wrapper
 dnf install emacs
 sdk install jextract
+
+// rebuild with fallback linker
+sdk install java 21.0.12.1+1-librca
+sdk default java 21.0.12.1+1-librca
+cd /jdk22u
+bash configure --with-target-bits=32 --enable-fallback-linker
+make clean
+make
+sdk install java 22-local32 /jdk22u/build/linux-x86-server-release/jdk
+sdk default java 22-local32
+cd /home/alan/jextract-portability
+./gradlew clean
+./gradlew :java-api:installDist
 ```
