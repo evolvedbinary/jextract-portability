@@ -11,7 +11,7 @@ repositories {
 java {
     toolchain {
         // FFM is fully finalized in Java 22 and updated in newer releases
-        languageVersion = JavaLanguageVersion.of(22) 
+        languageVersion = JavaLanguageVersion.of(23) 
     }
 }
 
