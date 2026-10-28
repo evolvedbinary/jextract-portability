@@ -36,6 +36,7 @@ sdk install jextract
 
 // rebuild with fallback linker
 sdk install java 21.0.12.1+1-librca
+sdk use java 21.0.12.1+1-librca
 sdk default java 21.0.12.1+1-librca
 cd /jdk22u
 bash configure --with-target-bits=32 --enable-fallback-linker
