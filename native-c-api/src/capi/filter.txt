@@ -1,0 +1,6 @@
+#### Recreate with: jextract --dump-includes filter.txt ./native-c-api/src/capi/c/api.h
+#### Then edit it manually to reduce it to the functions you really want to include
+#### Extracted from: /Users/alan/swProjects/evolvedBinary/jextract-portability/native-c-api/src/capi/c/api.h
+
+--include-function setLong        # header: /Users/alan/swProjects/evolvedBinary/jextract-portability/././native-c-api/src/capi/c/api.h
+--include-function setLongBuffers # header: /Users/alan/swProjects/evolvedBinary/jextract-portability/././native-c-api/src/capi/c/api.h

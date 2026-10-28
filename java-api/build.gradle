@@ -34,12 +34,15 @@ jextract.libraries {
     headerClassName = "CAPILib"
     targetPackage = "com.evolvedbinary.capi.generated"
     useSystemLoadLibrary = true
+    whitelist {
+      argFile = layout.projectDirectory.file("${project(':native-c-api').projectDir}/src/capi/filter.txt")
+    }
     libraries.add("capi")
   }
   sourceSets.main {
     jextract.libraries.addLater(capi)
   }
- }
+}
 
 // Automatically tell the JVM where to look for the compiled C library and unlock native execution flags
 tasks.named('run', JavaExec) {
