@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     // jextract plugin
-    id("de.infolektuell.jextract") version "1.0.0"
+    id("de.infolektuell.jextract") version "1.4.1"
 }
 
 repositories {
@@ -11,7 +11,7 @@ repositories {
 java {
     toolchain {
         // FFM is fully finalized in Java 22 and updated in newer releases
-        languageVersion = JavaLanguageVersion.of(23) 
+        languageVersion = JavaLanguageVersion.of(25) 
     }
 }
 
