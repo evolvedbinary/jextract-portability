@@ -31,6 +31,7 @@ import java.lang.invoke.VarHandle;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 
 import com.evolvedbinary.capi.generated.CAPILib;
 
@@ -44,15 +45,21 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
+
+        dumpCanonicalLayouts();
+
         try (Arena arena = Arena.ofConfined()) {
 
-            long segnum = 16;
-            long partSize = 8;
+            long segnum = 8;
+            long partSize = 4;
             long numLongs = segnum * partSize;
+
+            long start = 7L + (11L << 32);
+            long stride = 15L + (13L << 32);
 
             MemorySegment segment = arena.allocate(MemoryLayout.sequenceLayout(numLongs, CAPILib.C_LONG));
 
-            int status = CAPILib.setLong(segment, 7, 15, numLongs);
+            int status = CAPILib.setLong(segment, start, stride, numLongs);
             dumpSegment(segment, numLongs * CAPILib.C_LONG.byteSize());
 
             MemorySegment segmentPtrs = arena.allocate(MemoryLayout.sequenceLayout(segnum, CAPILib.C_POINTER));
@@ -64,7 +71,7 @@ public class App {
                 segmentPtrs.setAtIndex(CAPILib.C_POINTER, i, segmentI);
             }
 
-            status = CAPILib.setLongBuffers(segmentPtrs, 7, 15, segnum, partSize);
+            status = CAPILib.setLongBuffers(segmentPtrs, start, stride, segnum, partSize);
             for (MemorySegment part : partList) {
                 dumpSegment(part, partSize * CAPILib.C_LONG.byteSize());
             }
@@ -87,5 +94,10 @@ public class App {
             }
         }
         System.out.println(sb);
+    }
+
+    private static void dumpCanonicalLayouts() {
+        Map<String, MemoryLayout> layouts = Linker.nativeLinker().canonicalLayouts();
+        System.err.println("Layouts: " + layouts);
     }
 }
